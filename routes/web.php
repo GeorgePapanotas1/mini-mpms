@@ -25,14 +25,16 @@ Route::get('/', function () {
 
 Route::group([
     'middleware' => ['auth'],
+    'prefix' => 'dashboard',
 ], function () {
-    Route::get('/dashboard', [MainController::class, 'index'])->name('dashboard');
+    Route::get('/', [MainController::class, 'index'])->name('dashboard');
 
     Route::controller(PracticeController::class)->group(function () {
-        Route::get('/practice/{practice}/view', 'show'); // TODO Create the view for the single practice
-        Route::get('/practice/{practice}/edit', 'edit'); // TODO Create the view for edit a single practice
-        Route::get('/practice/{practice}/delete', 'delete'); // TODO Create the view for deleting a single practice
-        Route::get('/practice/{practice}/store', 'store'); // TODO Create the view for storing the single practice
+        Route::get('/practice/{practice}', 'show')->name('practice.show');
+        Route::get('/practice/{practice}/edit', 'edit')->name('practice.edit');
+        Route::post('/practice/{practice}/update', 'update')->name('practice.update');
+        Route::get('/practice/{practice}/delete', 'destroy')->name('practice.delete');
+        Route::get('/practice/{practice}/store', 'store')->name('practice.store');
     });
 });
 

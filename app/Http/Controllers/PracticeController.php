@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PracticeRequest;
 use App\Models\Practice;
+use App\Services\ImageService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class PracticeController extends Controller
 {
@@ -46,7 +50,7 @@ class PracticeController extends Controller
      */
     public function show(Practice $practice)
     {
-        dd($practice);
+        return view('practice.view', ["practice" => $practice]);
     }
 
     /**
@@ -57,7 +61,7 @@ class PracticeController extends Controller
      */
     public function edit(Practice $practice)
     {
-        //
+        return view('practice.edit', ["practice" => $practice]);
     }
 
     /**
@@ -65,21 +69,36 @@ class PracticeController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Practice  $practice
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, Practice $practice)
+    public function update(PracticeRequest $request, ImageService $imageService, Practice $practice)
     {
-        //
+        $data = [
+            "name" => $request->input('name'),
+            "email" => $request->input('email'),
+            "website_url" => $request->input('website'),
+        ];
+
+        if ($request->hasFile('logo')) {
+
+            $file = $request->file('logo');
+            $data["image"] = $imageService->storeImage($file, $practice);
+        }
+
+        $practice->update($data);
+
+        return redirect()->to(route('practice.show', $practice->id));
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Practice  $practice
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Practice $practice)
     {
-        //
+        $practice->delete();
+        return redirect()->to(route('dashboard'));
     }
 }
