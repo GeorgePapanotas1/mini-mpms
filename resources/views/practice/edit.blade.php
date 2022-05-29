@@ -18,8 +18,9 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <x-auth-validation-errors class="mb-4" :errors="$errors" />
-            <form method="POST" action="{{ route('practice.update', ['practice' => $practice->id]) }}" enctype="multipart/form-data">
+            <x-auth-validation-errors class="mb-4" :errors="$errors"/>
+            <form method="POST" action="{{ route('practice.update', ['practice' => $practice->id]) }}"
+                  enctype="multipart/form-data">
                 @csrf
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg flex justify-between align-middle py-6">
 
@@ -49,13 +50,29 @@
                         </div>
                     </div>
                     <div class="logo rounded-full mr-5">
-                        <img class="rounded-full w-48 h-48" src="{{ $practice->image ? asset("storage/$practice->image") : asset("storage/image.png")}} ">
+                        <img class="rounded-full w-48 h-48" src="{{ $practice->image }} ">
                         <div class="pt-5">
                             <x-label for="logo" :value="__('Logo')"/>
                             <x-input id="logo" class="block mt-1 w-full" type="file" name="logo" autofocus/>
                         </div>
                     </div>
 
+                </div>
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="p-6 bg-white border-b border-gray-200">
+                        <div class="text-gray-900 font-bold text-xl mb-2">Practice Tags <small style="float:right"><a href="{{route('fields.index')}}">Manage
+                                    Tags</a></small></div>
+                        <div class="grid gap-4 grid-cols-3 mt-6">
+                            @foreach($fields as $field)
+                                <div class="inline-flex">
+                                    <x-input name="field_of_practice[]" :id="$field->tag" type="checkbox"
+                                             :value="$field->id"
+                                             :checked="$practice->fields->pluck('id')->contains($field->id)"/>
+                                    <x-label class="ml-3" :for="$field->tag" :value="$field->tag"/>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
                 <div class="p-6 bg-white border-b border-gray-200">
                     <x-button class="ml-3 blue-500">

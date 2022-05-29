@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PracticeRequest;
+use App\Models\Field;
 use App\Models\Practice;
 use App\Services\ImageService;
 use Illuminate\Http\Request;
@@ -57,11 +58,14 @@ class PracticeController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Practice  $practice
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function edit(Practice $practice)
     {
-        return view('practice.edit', ["practice" => $practice]);
+        $with["practice"] = $practice;
+        $with["fields"] = Field::all();
+
+        return view('practice.edit', $with);
     }
 
     /**
@@ -86,6 +90,8 @@ class PracticeController extends Controller
         }
 
         $practice->update($data);
+
+        $practice->fields()->sync($request->input('field_of_practice'));
 
         return redirect()->to(route('practice.show', $practice->id));
     }

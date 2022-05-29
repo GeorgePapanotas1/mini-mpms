@@ -34,7 +34,7 @@
                     </div>
                 </div>
                 <div class="logo rounded-full mr-5">
-                    <img class="rounded-full w-48 h-48" src="{{ $practice->image ? asset("storage/$practice->image") : asset("storage/image.png")}} ">
+                    <img class="rounded-full w-48 h-48" src="{{ $practice->image }} ">
                 </div>
             </div>
         </div>

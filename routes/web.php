@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FieldController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\PracticeController;
 use Illuminate\Support\Facades\Route;
@@ -19,10 +20,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-//Route::get('/dashboard', function () {
-//    return view('dashboard');
-//})->middleware(['auth'])->name('dashboard');
-
 Route::group([
     'middleware' => ['auth'],
     'prefix' => 'dashboard',
@@ -36,6 +33,17 @@ Route::group([
         Route::get('/practice/{practice}/delete', 'destroy')->name('practice.delete');
         Route::get('/practice/{practice}/store', 'store')->name('practice.store');
     });
+
+    Route::controller(FieldController::class)->group(function () {
+        Route::get('/fields', 'index')->name('fields.index');
+        Route::get('/fields/create', 'create')->name('fields.create');
+        Route::post('/fields/store', 'store')->name('fields.store');
+        Route::get('/fields/{field}/delete', 'destroy')->name('fields.destroy');
+        Route::get('/fields/{field}/edit', 'edit')->name('fields.edit');
+        Route::post('/fields/{field}/update', 'update')->name('fields.update');
+    });
+
+
 });
 
 require __DIR__.'/auth.php';
