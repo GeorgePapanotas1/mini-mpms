@@ -32,7 +32,7 @@ vendor/bin/sail artisan key:generate
 vendor/bin/sail artisan migrate
 ```
 
-#### 7. Seed the database
+#### 7. Seed the database (login creds: admin@mini-mpms.test, pwd: password)
 ```shell
 vendor/bin/sail artisan db:seed
 ```
