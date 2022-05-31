@@ -46,7 +46,8 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     <div class="text-gray-900 font-bold text-xl mb-2">Employees</div>
                     <div class="grid gap-4 grid-cols-3 mt-6">
-                        @foreach($practice->employees as $employee)
+                        @foreach($employees as $employee)
+                            <a href="{{route("employees.edit", ["employee" => $employee->id])}}" target="_blank">
                             <div class="max-w-sm rounded overflow-hidden shadow-lg">
                                 <div class="px-6 py-4">
                                     <div class="font-bold text-xl mb-2">{{ $employee->first_name }} {{ $employee->last_name }}</div>
@@ -54,7 +55,11 @@
                                     <p class="text-gray-700 text-base">Phone: {{ $employee->phone ?? '-' }}</p>
                                 </div>
                             </div>
+                            </a>
                         @endforeach
+                    </div>
+                    <div class="mt-8">
+                        {{ $employees->links() }}
                     </div>
                 </div>
             </div>

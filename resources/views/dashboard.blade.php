@@ -9,7 +9,13 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <div class="text-gray-900 font-bold text-xl mb-2">Practice list</div>
+                    <div class="inline-flex justify-between w-full mb-10">
+                        <div class="text-gray-900 font-bold text-xl mb-2">Practice list</div>
+                        <x-button class="ml-3 bg-blue-700 float-right">
+                            <a href="{{route("practice.create")}}" target="_blank">{{ __('Create practice') }}</a>
+                        </x-button>
+                    </div>
+
                     <div class="grid gap-4 grid-cols-3 mt-6">
                         @foreach($practices as $practice)
                             <div class="max-w-sm rounded overflow-hidden shadow-lg">
@@ -37,6 +43,9 @@
                                 </div>
                             </div>
                         @endforeach
+                    </div>
+                    <div class="mt-8">
+                        {{ $practices->links() }}
                     </div>
                 </div>
             </div>

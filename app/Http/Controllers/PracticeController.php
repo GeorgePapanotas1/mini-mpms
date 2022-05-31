@@ -25,22 +25,41 @@ class PracticeController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function create()
     {
-        //
+        $with["fields"] = Field::all();
+
+        return view('practice.edit', $with);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param PracticeRequest $request
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(PracticeRequest $request, ImageService $imageService)
     {
-        //
+        $data = [
+            "name" => $request->input('name'),
+            "email" => $request->input('email'),
+            "website_url" => $request->input('website'),
+        ];
+
+        $practice = Practice::create($data);
+
+        if ($request->hasFile('logo')) {
+
+            $file = $request->file('logo');
+            $practice->image = $imageService->storeImage($file, $practice);
+            $practice->save();
+        }
+
+        $practice->fields()->sync($request->input('field_of_practice'));
+
+        return redirect()->to(route('practice.show', $practice->id));
     }
 
     /**
@@ -51,7 +70,9 @@ class PracticeController extends Controller
      */
     public function show(Practice $practice)
     {
-        return view('practice.view', ["practice" => $practice]);
+        $with["practice"] = $practice;
+        $with["employees"] = $practice->employees()->paginate(10);
+        return view('practice.view', $with);
     }
 
     /**
@@ -63,6 +84,7 @@ class PracticeController extends Controller
     public function edit(Practice $practice)
     {
         $with["practice"] = $practice;
+        $with["employees"] = $practice->employees()->paginate(10);
         $with["fields"] = Field::all();
 
         return view('practice.edit', $with);
